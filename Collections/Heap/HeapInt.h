@@ -19,7 +19,8 @@ typedef struct Heap{
 
 #define self Heap *self
 Heap heap_new(struct HeapTrait traits);
-Heap heap_build_from(Vector_i32 vec, struct HeapTrait traits);
+Heap heap_build_from_vec(Vector_i32 vec, struct HeapTrait traits);
+Heap heap_build_from_arr(int* arr, size_t len, struct HeapTrait traits);
 Heap heap_reheapify(self, struct HeapTrait traits);
 bool heap_push(self, const int val);
 bool heap_pop(self, int *return_value);

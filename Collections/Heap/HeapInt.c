@@ -1,4 +1,6 @@
 #include "HeapInt.h"
+#include <stdio.h>
+#include <stddef.h>
 
 #define self Heap *heap
 
@@ -56,9 +58,9 @@ static size_t heapify_up(
 // use for pop
 static void heapify_down(
     Vector_i32 *vec, 
+    size_t parent,
     bool (*compare_value)(const int val1, const int val2)
 ){  
-    size_t parent = 0;
     while (true) {
         size_t left_child = 2 * parent + 1;
         size_t right_child = 2 * parent + 2;
@@ -84,12 +86,69 @@ static void heapify_down(
 }
 
 
-Heap heap_build_from(Vector_i32 vec, struct HeapTrait traits){
+static void compare_with_parent(
+    Vector_i32 *vec, 
+    size_t child, 
+    bool (*compare)(const int val1, const int val2) 
+){
+    size_t parent = (child - 1) /2;
+    
+    if(compare(vector_i32_get(vec, child), vector_i32_get(vec, parent))){
+        vector_i32_swap(vec, parent, child);
+    }
+}
+
+static size_t heapify_sub_tree(
+    Vector_i32 *vec,
+    size_t left_child,
+    size_t right_child,
+    bool (*compare)(const int val1, const int val2)
+){
+    size_t parent = (right_child - 1) /2;
+    size_t to_swap;
+    
+    if(compare(vector_i32_get(vec, left_child),vector_i32_get(vec, right_child))){
+        to_swap = left_child;
+    } else {
+        to_swap = right_child;
+    }
+    
+    if(compare(vector_i32_get(vec, to_swap),vector_i32_get(vec, parent))){
+        vector_i32_swap(vec, parent, to_swap);
+        return to_swap;
+    }
+
+    return 0;
+}
+
+
+Heap heap_build_from_vec(Vector_i32 vec, struct HeapTrait traits){
     if(vec.alloc == NULL){
         perror("Unallocated Vector!");
         exit(EXIT_FAILURE);
     }
-    exit(EXIT_SUCCESS);
+    
+    Heap heap = {
+        .vec = vec,
+        .triats = traits
+    };
+
+    size_t len = vec.length-1; 
+    if(len % 2 == 1){
+        compare_with_parent(&vec, len, traits.compare_value);
+        len--;
+    }
+    
+    int catch;
+    while(len) {
+        if((catch = heapify_sub_tree(&vec, len-1, len, traits.compare_value))){
+            heapify_down(&vec, catch, traits.compare_value);
+        }
+        len -=2;
+    }
+    
+    return heap;
+    
 }
 
 bool heap_push(self, const int val){
@@ -107,7 +166,7 @@ bool heap_pop(self, int *return_value){
     bool signal = vector_i32_swap_remove(&heap->vec, 0, return_value);
 
     if(signal){
-        heapify_down(&heap->vec, heap->triats.compare_value);
+        heapify_down(&heap->vec, 0,heap->triats.compare_value);
         return true;
     }
     return false;
