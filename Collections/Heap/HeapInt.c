@@ -19,7 +19,7 @@ Heap heap_new(struct HeapTrait traits){
     };
     if(!(heap.vec.alloc)){
         perror("Allocation error!");
-        exit(EXIT_FAILURE);
+ 	exit(EXIT_FAILURE);
     } 
     return heap;
 }
