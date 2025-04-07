@@ -160,7 +160,10 @@ struct StringFormat strslice_format(StrSlice *slice){
     };
 }
 
-char* string_into_cstr(String str); 
+char* string_into_cstr(String str){
+    (str.buffer.alloc)[str.buffer.len] = '\0';
+    return str.buffer.alloc;
+}
 
 
 

@@ -1,13 +1,15 @@
 #ifndef STRING_ITERATORS_H
 #define STRING_ITERATORS_H
 
+#include "stdbool.h"
+
 #ifndef STRING_H_
     #warning "String Library is not imported! including to library..."
     #include "String.h"
 #endif
 
 
-#define DEFINE_ALL_STRING_ITER_TYPE
+// #define DEFINE_ALL_STRING_ITER_TYPE
 #if defined(DEFINE_ALL_STRING_ITER_TYPE)
 #define CHAR_ITER
 #define STR_WINDOW_ITER
@@ -15,37 +17,39 @@
 #define REVERSE_CHAR_ITER
 #define STRING_LINE_ITER
 #define WORD_STRING_ITER
-
 #endif // DEFINE_ALL_STRING_TYPE
 
 
 #if defined(CHAR_ITER)
 struct CharIter{
     size_t index;
-    String *str_ref;
+    const String const*str_ref;
 };
-char char_iter_next(struct CharIter iter);
+
+struct CharIter char_iter_new(String *str);
+bool char_iter_next(struct CharIter *iter, char *return_val);
 
 #endif // CHAR_ITER
 #if defined(STR_WINDOW_ITER)
 struct StrWindowIter{
     size_t index;
     size_t window_size;
-    String *str_ref;
+    const String const *str_ref;
 };
-
-StrSlice str_window_next(struct StrWindowIter);
+struct StrWindowIter str_window_new(String *str, size_t window_size);
+bool str_window_next(struct StrWindowIter *iter, StrSlice *return_slice);
 
 #endif // STR_WINDOW_ITER
 #if defined(MULTI_CHAR_ITER)
 
 struct MultiCharIter{
     size_t index;
-    size_t chuck;
-    String *str_ref;
+    size_t chunck;
+    const String const*str_ref;
 };
 
-StrSlice multi_char_next(struct MultiCharIter);
+struct MultiCharIter multi_char_new(String *str, size_t chuck_size); 
+bool multi_char_next(struct MultiCharIter *iter, StrSlice *return_slice);
 
 #endif // MULTI_CHAR_ITER
 #if defined(REVERSE_CHAR_ITER)
