@@ -10,7 +10,7 @@ int main() {
 
     LOG_INFO("Hello, World!");
     LOG_INFO("The number is %d", num);
-    LOG_INFO("User: %s with ID %d", name, num);
+    LOG_INFO("User: %s with ID %d %s", name, num, "Hello bITCH");
 
     LOG_ERROR("File not found: %s", "data.txt");
     LOG_ERROR("Failed to allocate memory!");

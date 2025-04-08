@@ -54,12 +54,13 @@ bool multi_char_next(struct MultiCharIter *iter, StrSlice *return_slice);
 #endif // MULTI_CHAR_ITER
 #if defined(REVERSE_CHAR_ITER)
 
-struct ReverseCharIter{
+struct RevCharIter{
     size_t index;
     String *str_ref;
 };
 
-char reverse_char_next();
+struct RevCharIter rev_char_new(String *str);
+bool rev_char_next(struct RevCharIter *iter, char *return_char);
 
 
 #endif // REVERSE_STRING_ITER
@@ -78,6 +79,8 @@ struct WordStrIter{
     String *str_ref;
 };
 
+struct WordStrIter word_str_iter_new(String *str);
+bool word_str_iter_next(struct WordStrIter *iter, StrSlice *return_slice);
 
 
 #endif // WORD_STRING_ITER

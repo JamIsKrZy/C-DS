@@ -15,6 +15,7 @@ typedef enum {
     #undef X
 } ErrorCode;
 
+
 // Step 2: Generate a function to convert enum to string
 const char* error_to_string(ErrorCode err) {
     switch (err) {
@@ -41,7 +42,7 @@ int main() {
     // Print all error messages
     printf("\nAll Errors:\n");
     for (int i = 0; i < sizeof(error_strings) / sizeof(error_strings[0]); i++) {
-        printf("  [%d] %s\n", i, error_strings[i]);
+        printf("[%d] %s\n", i, error_strings[i]);
     }
 
     return 0;

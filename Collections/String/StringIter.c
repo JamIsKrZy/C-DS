@@ -91,5 +91,69 @@ bool multi_char_next(struct MultiCharIter *iter, StrSlice *return_slice) {
     return true;
 }
 
+struct RevCharIter rev_char_new(String *str){
+    return (struct RevCharIter){
+        .index = str->buffer.len-1,
+        .str_ref = str
+    };
+}
+bool rev_char_next(
+    struct RevCharIter *iter, 
+    char *return_char
+){
+    if(!iter || iter->index >= iter->str_ref->buffer.len) return false;
+
+
+    *return_char = iter->str_ref->buffer.alloc[iter->index];
+    if(iter->index == 0){
+        iter->index = iter->str_ref->buffer.len;
+        return true;
+    }
+    iter->index -= 1;
+    return true;
+}
+
+struct WordStrIter word_str_iter_new(String *str){
+    return (struct WordStrIter){
+        .index = 0,
+        .str_ref = str
+    };
+}
+bool word_str_iter_next(
+    struct WordStrIter *iter, 
+    StrSlice *return_slice
+){
+    if(!iter) return false;
+
+    size_t index_arr = iter->index;
+    VectorChar vec = iter->str_ref->buffer;
+
+    if(index_arr < vec.len){
+        
+        while (vec.alloc[index_arr] == ' '){
+            if(index_arr >= vec.len) goto out;
+            index_arr++;
+        }
+        return_slice->ptr = vec.alloc + index_arr;
+
+        while (vec.alloc[index_arr] != ' '){
+            if(index_arr >= vec.len) break;
+            index_arr++;
+        }
+        return_slice->len = (vec.alloc + index_arr) - (return_slice->ptr); 
+        iter->index = index_arr;
+
+        return true;
+    }   
+    out:
+
+    *return_slice = (StrSlice){
+        .len = 0,
+        .ptr = NULL
+    };
+    return false;
+}
+
+
 
 

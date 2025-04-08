@@ -6,7 +6,7 @@
 #include <stdio.h> 
 #include <stdlib.h>
 
-#define VECTOR_TYPE(type)               \
+#define VECTOR_INIT_TYPE(type)               \
 typedef struct vector_##type {          \
     type* alloc;                        \
     size_t cap;                         \
@@ -18,7 +18,7 @@ typedef struct vector_##type {          \
 #if defined(VEC_CHAR_TYPE)
 
 #define Char char
-VECTOR_TYPE(Char);
+VECTOR_INIT_TYPE(Char);
 
 #endif // VEC_STRING_TYPE
 
@@ -30,43 +30,43 @@ VECTOR_TYPE(Char);
 
     #if defined(VEC_U8_TYPE)
         #define U8 uint8_t
-        VECTOR_TYPE(U8);
+        VECTOR_INIT_TYPE(U8);
     #endif // VEC_U32_TYPE
     
     #if defined(VEC_U16_TYPE)
         #define U16 uint16_t
-        VECTOR_TYPE(U16)
+        VECTOR_INIT_TYPE(U16)
     #endif // VEC_U8_TYPE
     
     #if defined(VEC_U32_TYPE)
         #define U32 uint32_t
-        VECTOR_TYPE(U32)
+        VECTOR_INIT_TYPE(U32)
     #endif
 
     #if defined(VEC_U64_TYPE)
         #define U64 uint64_t
-        VECTOR_TYPE(U64)
+        VECTOR_INIT_TYPE(U64)
     #endif
     
     #if defined(VEC_I8_TYPE)
         #define I8 int8_t
-        VECTOR_TYPE(I8)
+        VECTOR_INIT_TYPE(I8)
     #endif // VEC_U32_TYPE
     
     
     #if defined(VEC_I16_TYPE)
         #define I16 int16_t
-        VECTOR_TYPE(I16)
+        VECTOR_INIT_TYPE(I16)
     #endif // VEC_U8_TYPE
     
     #if defined(VEC_I32_TYPE)
         #define I32 int32_t
-        VECTOR_TYPE(I32)
+        VECTOR_INIT_TYPE(I32)
     #endif
 
     #if defined(VEC_I64_TYPE)
         #define I64 int64_t
-        VECTOR_TYPE(I64)
+        VECTOR_INIT_TYPE(I64)
     #endif
     
 
