@@ -5,14 +5,14 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#define VEC_CHAR_TYPE
-#include "../Vector/Vector.h"
+#define VEC_CHAR_STRING_TYPE
+#include "../vector/vector.h"
 
 #define __STRING_DEFINE__ 
 
 
 typedef struct String {
-    VectorChar buffer;
+    __VectorChar__ buffer;
 } String; 
 
 typedef struct StrSlice{
@@ -39,6 +39,7 @@ String string_from_slice(const char *cstr);
 void string_push(char letter);
 void string_push_str(String *str, String *src);
 void string_push_cstr(String *str, const char *src);
+StrSlice string_to_slice(String *str);
 
 char* string_into_cstr(String str); 
 
@@ -68,7 +69,16 @@ struct StringFormat strslice_format(StrSlice *slice);
 
 size_t string_len(String *str);
 void string_clear(String *str);
-bool str_slice_eq(StrSlice *str1, StrSlice *str2);
+
+/**
+ * @brief 
+ * 
+ * @param str1 
+ * @param str2 
+ * @return bool 
+ *  
+ */
+int str_slice_eq(StrSlice *str1, StrSlice *str2);
 
 
 

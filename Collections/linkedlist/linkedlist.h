@@ -1,5 +1,5 @@
-#ifndef LINKEDLIST_H_
-#define LINKEDLIST_H_
+#ifndef LINKEDLIST_H_METHODS_
+#define LINKEDLIST_H_METHODS_
 
 
 #include <stddef.h>
@@ -13,20 +13,21 @@
     })
 #endif
 
-
-#define INIT_LINKEDLIST_TYPE(type)\
-struct ll_node_##type {\
-    struct ll_node_##type *next;\
-    struct ll_node_##type *prev; \
-    type element;\
-};\
-typedef struct {\
-    struct ll_node_##type *head;\
-    struct ll_node_##type *tail;\
-    size_t len;\
-} Linkedlist##type;\
+// [Deprecated]
+// #define INIT_LINKEDLIST_TYPE(type)\
+// struct ll_node_##type {\
+//     struct ll_node_##type *next;\
+//     struct ll_node_##type *prev; \
+//     type element;\
+// };\
+// typedef struct {\
+//     struct ll_node_##type *head;\
+//     struct ll_node_##type *tail;\
+//     size_t len;\
+// } LinkedList_##type;
 
 #define LL_ALLOC(type) calloc(1, sizeof(type))
+#define LL_FREE(ptr) free(ptr)
 
 #define list_new() {\
     .head = NULL,\
@@ -38,7 +39,7 @@ typedef struct {\
 #define list_from(type,...) ({\
     type arr[] = __VA_ARGS__;\
     size_t len = sizeof(arr)/sizeof(arr[0]);\
-    Linkedlist##type ll = list_new();\
+    LinkedList_##type ll = list_new();\
     for (size_t i = 0; i < len; i++) {list_push_tail(ll, arr[i]);}\
     ll;\
 })
@@ -93,14 +94,35 @@ typedef struct {\
 
 
 
-#define list_pop_front() todo
+#define list_pop_front(ll, return_value)({\
+    bool return_flag = true;\
+    if(!ll.head){\
+        return_flag = false;\
+    }\
+    else\
+    {\
+        __typeof__(ll.head) node = ll.head;\
+        if(!node){\
+            return_flag = false;\
+        }\
+        else\
+        {\
+            return_value = node->element;\
+            ll.head = node->next? node->next : NULL;\
+            LL_FREE(node);  \
+            ll.len -= 1;\
+        }\
+    }\
+    return_flag;\
+})
+
 #define list_pop_back() todo
 
 #define list_insert() todo
 #define list_len() todo
 
 #define list_remove_nth() todo
-#define list_() todo
+#define list_is_empty(ll) (ll.len? false: true)
 
 #define list_free() todo
 
@@ -130,5 +152,52 @@ typedef struct {\
 #endif
 
 #endif
+
+
+
+
+
+
+#ifdef T
+
+// Helper macros for name pasting
+#define _LL_JOIN(a, b) a##b
+#define LL_JOIN(a, b) _LL_JOIN(a, b)
+
+// Helper macro to sanitize type names for pointers
+#ifdef T_NAME
+    #define LL_TYPE_NAME T_NAME
+#else
+    // Default to raw T if no custom name is given
+    #define LL_TYPE_NAME T
+#endif
+
+#define LL_STRUCT_NAME(name) LL_JOIN(name, LL_TYPE_NAME)
+
+// Define the node struct
+struct LL_STRUCT_NAME(ll_node_) {
+    struct LL_STRUCT_NAME(ll_node_) *next;
+    struct LL_STRUCT_NAME(ll_node_) *prev;
+    T element;
+};
+
+// Define the linked list struct
+typedef struct {
+    struct LL_STRUCT_NAME(ll_node_) *head;
+    struct LL_STRUCT_NAME(ll_node_) *tail;
+    size_t len;
+} LL_STRUCT_NAME(LinkedList_);
+
+// Cleanup after including
+#undef _LL_JOIN
+#undef LL_JOIN
+#undef LL_STRUCT_NAME
+#undef LL_TYPE_NAME
+#ifdef T_NAME
+    #undef T_NAME
+#endif
+#undef T
+
+#endif // T
 
 

@@ -1,5 +1,5 @@
 #define DEFINE_ALL_STRING_ITER_TYPE
-#include "StringIter.h"
+#include "string_iter.h"
 
 struct CharIter char_iter_new(String *str){
     return (struct CharIter){
@@ -71,7 +71,7 @@ bool multi_char_next(struct MultiCharIter *iter, StrSlice *return_slice) {
     size_t chunk = iter->chunck;
 
     const struct String *str_ref = iter->str_ref;
-    const VectorChar *buffer = &str_ref->buffer;
+    const __VectorChar__ *buffer = &str_ref->buffer;
 
     size_t buf_len = buffer->len;
     char *buf_ptr = buffer->alloc;
@@ -126,7 +126,7 @@ bool word_str_iter_next(
     if(!iter) return false;
 
     size_t index_arr = iter->index;
-    VectorChar vec = iter->str_ref->buffer;
+    __VectorChar__ vec = iter->str_ref->buffer;
 
     if(index_arr < vec.len){
         

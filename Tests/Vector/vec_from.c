@@ -1,15 +1,16 @@
 #include "../ColorFormat.h"
 #include <assert.h>
+#include <stdint.h>
 
-
-#define VEC_U32_TYPE
-#include "Vector/Vector.h"
+typedef uint32_t U32;
+#define T U32
+#include "vector/vector.h"
 
 
 int main(int argc, char const *argv[])
 {
-    int arr[] = {2,6,3,5};
-    VectorU32 vec = vector_from(U32, {5,3,6,2});
+    U32 arr[] = {2,6,3,5};
+    Vector_U32 vec = vector_from(U32, {5,3,6,2});
     printf(CYAN "New Vec Created \n");
     
     vector_print(vec, "%d");

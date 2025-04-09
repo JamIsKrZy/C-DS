@@ -5,7 +5,7 @@
 
 #ifndef STRING_H_
     #warning "String Library is not imported! including to library..."
-    #include "String.h"
+    #include "string.h"
 #endif
 
 

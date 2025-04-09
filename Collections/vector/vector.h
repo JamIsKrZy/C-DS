@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+// [Deprecated]
 #define VECTOR_INIT_TYPE(type)               \
 typedef struct Vector##type {          \
     type* alloc;                        \
@@ -13,60 +15,16 @@ typedef struct Vector##type {          \
 } Vector##type                           \
 
 
-#if defined(VEC_CHAR_TYPE)
-
-#define Char char
-VECTOR_INIT_TYPE(Char);
-
-#endif // VEC_STRING_TYPE
 
 
-#ifndef _STDINT_H
-    #warning "<stdint.h> was not included before this header; including it now."
-    #include <stdint.h>
-#endif
+#if defined(VEC_CHAR_STRING_TYPE)
+typedef struct VectorChar {          
+    char* alloc;                        
+    size_t len;                         
+    size_t cap;                         
+} __VectorChar__; 
+#endif // VEC_CHAR_STRING_TYPE
 
-#if defined(VEC_U8_TYPE)
-    #define U8 uint8_t
-    VECTOR_INIT_TYPE(U8);
-#endif // VEC_U32_TYPE
-
-#if defined(VEC_U16_TYPE)
-    #define U16 uint16_t
-    VECTOR_INIT_TYPE(U16);
-#endif // VEC_U8_TYPE
-
-#if defined(VEC_U32_TYPE)
-    #define U32 uint32_t
-    VECTOR_INIT_TYPE(U32);
-#endif
-
-#if defined(VEC_U64_TYPE)
-    #define U64 uint64_t
-    VECTOR_INIT_TYPE(U64);
-#endif
-
-#if defined(VEC_I8_TYPE)
-    #define I8 int8_t
-    VECTOR_INIT_TYPE(I8);
-#endif // VEC_U32_TYPE
-
-
-#if defined(VEC_I16_TYPE)
-    #define I16 int16_t
-    VECTOR_INIT_TYPE(I16);
-#endif // VEC_U8_TYPE
-
-#if defined(VEC_I32_TYPE)
-    #define I32 int32_t
-    VECTOR_INIT_TYPE(I32);
-#endif
-
-#if defined(VEC_I64_TYPE)
-    #define I64 int64_t
-    VECTOR_INIT_TYPE(I64);
-#endif
-    
  
 #define vector_new(type) {0}
 
@@ -119,7 +77,7 @@ VECTOR_INIT_TYPE(Char);
 
 #define vector_from(type, ...) \
     ({\
-        Vector##type vec = {0}; \
+        Vector_##type vec = {0}; \
         type arr[] = __VA_ARGS__; \
         size_t len = sizeof(arr)/sizeof(arr[0]);\
         for (size_t i = 0; i < len; i++) {vector_push(vec, arr[i]);}\
@@ -225,5 +183,41 @@ VECTOR_INIT_TYPE(Char);
 
 #define vector_swap_remove(vec, index)({})
 
+
+#endif
+
+
+
+
+
+#ifdef T
+
+#define _VEC_JOIN(a,b) a##b
+#define VEC_JOIN(a,b) _VEC_JOIN(a,b)
+
+#ifdef T_NAME
+    #define VEC_TYPE_NAME T_NAME
+#else 
+    #define VEC_TYPE_NAME T
+#endif
+
+
+#define VEC_STRUCT_NAME(name) VEC_JOIN(name, VEC_TYPE_NAME)
+
+typedef struct {          
+    T* alloc;                        
+    size_t len;                         
+    size_t cap;                         
+} VEC_STRUCT_NAME(Vector_);
+
+#undef _VEC_JOIN
+#undef VEC_JOIN
+#undef VEC_TYPE_NAME
+#ifdef T_NAME
+    #undef T_NAME
+#endif 
+
+
+#undef T
 
 #endif

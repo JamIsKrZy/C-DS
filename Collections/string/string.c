@@ -1,8 +1,10 @@
-#include "String.h"
-#include "../Vector/Vector.h"
-#include <string.h>
-
+#include "string.h"
 #include <stdint.h>
+#include "../vector/vector.h"
+#include <string.h>
+#include <stdint.h>
+
+#define Char char
 
 #define IF_STRING_ALLOCATED(str) if(!str->buffer.alloc){\
     panic("Unallocated String Memory");\
@@ -46,7 +48,7 @@ void string_push_cstr(String *str, const char *src){
         panic("String is not defined/allocated!");
     }
     
-    VectorChar local_buffer = str->buffer;
+    __VectorChar__ local_buffer = str->buffer;
 
     size_t len = strlen(src);
     size_t f_len = local_buffer.len + len;
@@ -62,7 +64,7 @@ void string_push_cstr(String *str, const char *src){
 
 void print_string(String *str){
     IF_STRING_ALLOCATED(str);
-    VectorChar buffer = str->buffer;
+    __VectorChar__ buffer = str->buffer;
     printf("%.*s\n", (int)buffer.len, buffer.alloc);
     
 }
@@ -95,7 +97,7 @@ StrSlice string_slice(
     const size_t start, 
     const size_t end
 ){
-    VectorChar local_buffer = src->buffer;
+    __VectorChar__ local_buffer = src->buffer;
     if(!local_buffer.alloc) {
         panic("String is not defined/allocated!");
     } else if(end < start){
@@ -109,6 +111,13 @@ StrSlice string_slice(
     return (StrSlice){
         .ptr = ((char*)local_buffer.alloc)+start,
         .len = end - start
+    };
+}
+
+StrSlice string_to_slice(String *str){
+    return (StrSlice){
+        .len = str->buffer.len,
+        .ptr = str->buffer.alloc
     };
 }
 
@@ -183,6 +192,11 @@ char* string_into_cstr(String str){
     return str.buffer.alloc;
 }
 
+
+int str_slice_eq(StrSlice *str1, StrSlice *str2){
+    if(str1->len != str2->len) return false;
+    return !memcmp(str1->ptr, str2->ptr, str1->len);
+}
 
 
 
