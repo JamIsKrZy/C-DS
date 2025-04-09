@@ -12,7 +12,7 @@ bool char_iter_next(struct CharIter *iter, char *return_val){
         *return_val = 0;
         return false;
     }
-
+    
     if(iter->index >= iter->str_ref->buffer.len){
         *return_val = 0;
         return false;

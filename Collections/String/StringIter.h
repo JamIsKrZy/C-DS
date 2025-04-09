@@ -23,7 +23,7 @@
 #if defined(CHAR_ITER)
 struct CharIter{
     size_t index;
-    const String const*str_ref;
+    const String *str_ref;
 };
 
 struct CharIter char_iter_new(String *str);
@@ -34,7 +34,7 @@ bool char_iter_next(struct CharIter *iter, char *return_val);
 struct StrWindowIter{
     size_t index;
     size_t window_size;
-    const String const *str_ref;
+    const String  *str_ref;
 };
 struct StrWindowIter str_window_new(String *str, size_t window_size);
 bool str_window_next(struct StrWindowIter *iter, StrSlice *return_slice);
@@ -45,7 +45,7 @@ bool str_window_next(struct StrWindowIter *iter, StrSlice *return_slice);
 struct MultiCharIter{
     size_t index;
     size_t chunck;
-    const String const*str_ref;
+    const String *str_ref;
 };
 
 struct MultiCharIter multi_char_new(String *str, size_t chuck_size); 

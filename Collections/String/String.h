@@ -3,10 +3,12 @@
 
 
 #include <stddef.h>
+#include <stdbool.h>
 
 #define VEC_CHAR_TYPE
 #include "../Vector/Vector.h"
 
+#define __STRING_DEFINE__ 
 
 
 typedef struct String {
@@ -41,9 +43,12 @@ void string_push_cstr(String *str, const char *src);
 char* string_into_cstr(String str); 
 
 
+
 StrSlice string_slice(const String *src, const size_t start, const size_t end);
 StrSlice string_slice_from_cstr(char const *src, const size_t start, const size_t end);
 StrSlice string_slice_from_strslice(const StrSlice *src, const size_t start, const size_t end);
+
+void string_free(String str);
 
 void print_string(String *str);
 
@@ -63,6 +68,7 @@ struct StringFormat strslice_format(StrSlice *slice);
 
 size_t string_len(String *str);
 void string_clear(String *str);
+bool str_slice_eq(StrSlice *str1, StrSlice *str2);
 
 
 

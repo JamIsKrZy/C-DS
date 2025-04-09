@@ -4,9 +4,12 @@
 
 #include <stdint.h>
 
+#define IF_STRING_ALLOCATED(str) if(!str->buffer.alloc){\
+    panic("Unallocated String Memory");\
+}
 
 #define panic(msg, ...) do { \
-    fprintf(stderr, "PANIC at %s:%d: " msg "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
+    fprintf(stderr, "PANIC: at %s:%d: " msg "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
     abort(); \
 } while (0)
 
@@ -42,7 +45,7 @@ void string_push_cstr(String *str, const char *src){
     if(!str->buffer.alloc) {
         panic("String is not defined/allocated!");
     }
-
+    
     VectorChar local_buffer = str->buffer;
 
     size_t len = strlen(src);
@@ -58,11 +61,14 @@ void string_push_cstr(String *str, const char *src){
 }
 
 void print_string(String *str){
+    IF_STRING_ALLOCATED(str);
     VectorChar buffer = str->buffer;
     printf("%.*s\n", (int)buffer.len, buffer.alloc);
+    
 }
 
 struct StringFormat string_format(String *str){
+    IF_STRING_ALLOCATED(str);
     return (struct StringFormat){
         .spacing = str->buffer.len > INT32_MAX? 
             INT32_MAX : 
@@ -71,7 +77,16 @@ struct StringFormat string_format(String *str){
     };
 }
 
+void string_free(String str){
+    if(!str.buffer.alloc){\
+        panic("Unallocated String Memory");\
+    }
+    vector_free(str.buffer);
+}
+
+
 void string_clear(String *str){
+    IF_STRING_ALLOCATED(str);
     str->buffer.len = 0;
 }
 
@@ -161,6 +176,9 @@ struct StringFormat strslice_format(StrSlice *slice){
 }
 
 char* string_into_cstr(String str){
+    if(!str.buffer.alloc){\
+        panic("Unallocated String Memory");\
+    }
     (str.buffer.alloc)[str.buffer.len] = '\0';
     return str.buffer.alloc;
 }

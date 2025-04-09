@@ -1,18 +1,16 @@
 #ifndef VECTOR_H__
 #define VECTOR_H__
 
-
 #include <stddef.h>
-#include <stdio.h> 
+#include <stdio.h>
 #include <stdlib.h>
 
 #define VECTOR_INIT_TYPE(type)               \
-typedef struct vector_##type {          \
+typedef struct Vector##type {          \
     type* alloc;                        \
-    size_t cap;                         \
     size_t len;                         \
-} Vector##type                          \
-
+    size_t cap;                         \
+} Vector##type                           \
 
 
 #if defined(VEC_CHAR_TYPE)
@@ -23,56 +21,52 @@ VECTOR_INIT_TYPE(Char);
 #endif // VEC_STRING_TYPE
 
 
-
 #ifndef _STDINT_H
     #warning "<stdint.h> was not included before this header; including it now."
     #include <stdint.h>
-
-    #if defined(VEC_U8_TYPE)
-        #define U8 uint8_t
-        VECTOR_INIT_TYPE(U8);
-    #endif // VEC_U32_TYPE
-    
-    #if defined(VEC_U16_TYPE)
-        #define U16 uint16_t
-        VECTOR_INIT_TYPE(U16)
-    #endif // VEC_U8_TYPE
-    
-    #if defined(VEC_U32_TYPE)
-        #define U32 uint32_t
-        VECTOR_INIT_TYPE(U32)
-    #endif
-
-    #if defined(VEC_U64_TYPE)
-        #define U64 uint64_t
-        VECTOR_INIT_TYPE(U64)
-    #endif
-    
-    #if defined(VEC_I8_TYPE)
-        #define I8 int8_t
-        VECTOR_INIT_TYPE(I8)
-    #endif // VEC_U32_TYPE
-    
-    
-    #if defined(VEC_I16_TYPE)
-        #define I16 int16_t
-        VECTOR_INIT_TYPE(I16)
-    #endif // VEC_U8_TYPE
-    
-    #if defined(VEC_I32_TYPE)
-        #define I32 int32_t
-        VECTOR_INIT_TYPE(I32)
-    #endif
-
-    #if defined(VEC_I64_TYPE)
-        #define I64 int64_t
-        VECTOR_INIT_TYPE(I64)
-    #endif
-    
-
-
 #endif
 
+#if defined(VEC_U8_TYPE)
+    #define U8 uint8_t
+    VECTOR_INIT_TYPE(U8);
+#endif // VEC_U32_TYPE
+
+#if defined(VEC_U16_TYPE)
+    #define U16 uint16_t
+    VECTOR_INIT_TYPE(U16);
+#endif // VEC_U8_TYPE
+
+#if defined(VEC_U32_TYPE)
+    #define U32 uint32_t
+    VECTOR_INIT_TYPE(U32);
+#endif
+
+#if defined(VEC_U64_TYPE)
+    #define U64 uint64_t
+    VECTOR_INIT_TYPE(U64);
+#endif
+
+#if defined(VEC_I8_TYPE)
+    #define I8 int8_t
+    VECTOR_INIT_TYPE(I8);
+#endif // VEC_U32_TYPE
+
+
+#if defined(VEC_I16_TYPE)
+    #define I16 int16_t
+    VECTOR_INIT_TYPE(I16);
+#endif // VEC_U8_TYPE
+
+#if defined(VEC_I32_TYPE)
+    #define I32 int32_t
+    VECTOR_INIT_TYPE(I32);
+#endif
+
+#if defined(VEC_I64_TYPE)
+    #define I64 int64_t
+    VECTOR_INIT_TYPE(I64);
+#endif
+    
  
 #define vector_new(type) {0}
 
@@ -125,7 +119,7 @@ VECTOR_INIT_TYPE(Char);
 
 #define vector_from(type, ...) \
     ({\
-        Vector_##type vec = {0}; \
+        Vector##type vec = {0}; \
         type arr[] = __VA_ARGS__; \
         size_t len = sizeof(arr)/sizeof(arr[0]);\
         for (size_t i = 0; i < len; i++) {vector_push(vec, arr[i]);}\
@@ -183,14 +177,18 @@ VECTOR_INIT_TYPE(Char);
         for(size_t i=0; i < vec.len; i++){\
             if (vec.alloc[i] == value){\
                 return_val = true;\
-                goto out;\
+                break;\
             }      \
         }\
-        out:\
         return_val;\
     })\
 
-
+/**
+ * @brief get the index position of a value. The first occurence will be returned
+ * 
+ * - Linear Search - Time Complexity O(n)
+ * 
+ */
 #define vector_index_of(vec, value, returned_index)\
     ({ \
         bool return_val = false;\
@@ -199,10 +197,9 @@ VECTOR_INIT_TYPE(Char);
             if (vec.alloc[i] == value){\
                 returned_index = i;\
                 return_val = true;\
-                goto out;\
+                break;\
             }      \
         }\
-        out:\
         return_val;\
     })\
 
@@ -221,10 +218,12 @@ VECTOR_INIT_TYPE(Char);
 
 #define vector_free(vec) do{\
     free(vec.alloc);\
+    vec.alloc = NULL;\
     vec.len = 0;\
     vec.cap = 0;\
 }while(0)
 
 #define vector_swap_remove(vec, index)({})
+
 
 #endif
