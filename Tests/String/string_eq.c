@@ -8,7 +8,7 @@ void printfy(StrSlice *slice){
 }
 
 
-void print_slices(int len, ...){
+void print_slices(size_t len, ...){
     va_list list;
     va_start(list, len);
     

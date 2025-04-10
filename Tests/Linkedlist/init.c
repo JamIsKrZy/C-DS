@@ -23,13 +23,14 @@ typedef uint32_t U32;
 int main(int argc, char const *argv[])
 {
     U32 arr[] = {55,4,23,66,23,76,12};
-    char *arr_str[] =  {"James", "Mike", "Wowaski"};
+    char *arr_str[] =  {"Wowaski", "Mike", "James" };
 
     LinkedList_U32  ll = list_from(U32,{4,23,66,23,76,12});
     LinkedList_CStr llc = list_from(CStr,{"James", "Mike", "Wowaski"});
 
     list_push_head(ll, 55); // add 55 head of list
 
+    
     // Print out
     printfy(ll, "%d");
     printfy(llc, "\"%s\"");
@@ -45,7 +46,7 @@ int main(int argc, char const *argv[])
     }
     printf("\n");
     for(size_t i=0; !list_is_empty(llc); i++){
-        list_pop_front(llc, catch_str);
+        list_pop_back(llc, catch_str);
         printf("[assert: %s] ", catch_str); fflush(stdout);
         assert(!strcmp(catch_str, arr_str[i]));
     }

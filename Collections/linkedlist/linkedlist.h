@@ -6,12 +6,20 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+
+#define panic(msg, ...) do { \
+    fprintf(stderr, "PANIC: at %s:%d: " msg "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
+    abort(); \
+} while (0)
+
 #ifndef todo
     #define todo ({\
         fprintf(stderr, "Unimplemented! at %s:%d: \n", __FILE__, __LINE__); \
         abort();\
     })
 #endif
+
+
 
 // [Deprecated]
 // #define INIT_LINKEDLIST_TYPE(type)\
@@ -104,8 +112,9 @@
         __typeof__(ll.head) node = ll.head;\
         if(node){\
             return_value = node->element;\
-            ll.head = node->next? node->next : NULL;\
-            ll.head->prev = NULL;\
+            if(ll.head = node->next)\
+                ll.head->prev = NULL;\
+\
             LL_FREE(node);  \
             ll.len -= 1;\
         }\
@@ -117,7 +126,7 @@
     return_flag;\
 })
 
-#define list_pop_back(ll) ({\
+#define list_pop_back(ll, return_value) ({\
     bool return_flag = true;\
     if(!ll.tail){\
         return_flag = false;\
@@ -127,8 +136,8 @@
         __typeof__(ll.head) node = ll.tail;\
         if(node){\
             return_value = node->element;\
-            ll.tail = node->prev? node->prev : NULL;\
-            ll.tail->next = NULL;\
+            if (ll.tail = node->prev)\
+                ll.tail->next = NULL;\
             LL_FREE(node);\
             ll.len -= 1;\
         }\
@@ -140,13 +149,41 @@
     return_flag;\
 })
 
-#define list_insert() todo
-#define list_len() todo
+#define list_insert(ll, value, index) ({}) 
 
-#define list_remove_nth() todo
+#define list_len(ll) (ll->len)
+
+#define list_remove_nth() do{\
+}while(0)
+
 #define list_is_empty(ll) (ll.len? false: true)
 
-#define list_free() todo
+#define list_get_ref(ll, index) ({\
+    __typeof__(ll->head) node = ll.head;\
+    for (\
+        __typeof__(index) __i__ = index; \
+        i > 0; \
+        __i__++\
+    ){\
+        if(node){\
+            node = node->next;\
+        }\
+        else\
+        {\
+            panic("Linkedlist Out of Bounds!");\
+        }\
+    }    \
+    node\
+})
+
+/**
+ * Creates a copy of the value
+ */
+#define list_get(ll, index) ({\
+})
+
+#define list_free() do{\
+} while(0)
 
 
 #ifdef __STRING_DEFINE_FLAG__ 
