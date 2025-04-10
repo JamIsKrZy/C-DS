@@ -1,4 +1,5 @@
 #define DEFINE_ALL_STRING_ITER_TYPE
+#include "string.h"
 #include "string_iter.h"
 
 struct CharIter char_iter_new(String *str){

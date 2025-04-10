@@ -43,6 +43,34 @@ String string_from_cstr(const char *cstr){
     return str;
 }
 
+void string_push(
+    String *str1, 
+    String *str2
+){
+    StrSlice slc = string_to_slice(str2);
+    string_push_slice(str1, slc);
+}
+
+void string_push_slice(
+    String *str, 
+    StrSlice src
+){
+    if(!str->buffer.alloc) {
+        panic("String is not defined/allocated!");
+    }
+
+    __VectorChar__ local_buffer = str->buffer;
+
+    size_t f_len = local_buffer.len + src.len;
+
+    while (f_len > local_buffer.cap) vector_grow(local_buffer);
+    
+    memcpy((local_buffer.alloc)+(local_buffer.len), src.ptr, src.len);
+    local_buffer.len = f_len;
+
+    str->buffer = local_buffer;
+}
+
 void string_push_cstr(String *str, const char *src){
     if(!str->buffer.alloc) {
         panic("String is not defined/allocated!");
@@ -52,9 +80,9 @@ void string_push_cstr(String *str, const char *src){
 
     size_t len = strlen(src);
     size_t f_len = local_buffer.len + len;
-    while (f_len > local_buffer.cap){
-        vector_grow(local_buffer);
-    }
+
+    while (f_len > local_buffer.cap) vector_grow(local_buffer);
+    
     
     memcpy(((char*) local_buffer.alloc)+local_buffer.len, src, len);
     local_buffer.len = f_len;
@@ -124,7 +152,20 @@ StrSlice string_to_slice(String *str){
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
 
-StrSlice string_slice_from_cstr(
+StrSlice cstr_to_slice(const char *str){
+    return (StrSlice){
+        .len = strlen(str),
+        .ptr = str,
+    };
+}
+
+#pragma GCC diagnostic pop
+
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
+
+StrSlice cstr_slice(
     char const *src, 
     const size_t start, 
     const size_t end
@@ -151,7 +192,7 @@ StrSlice string_slice_from_cstr(
 
 
 
-StrSlice string_slice_from_strslice(
+StrSlice strslice_slice(
     const StrSlice *src, 
     const size_t start, 
     const size_t end

@@ -3,7 +3,7 @@
 
 #include "stdbool.h"
 
-#ifndef STRING_H_
+#ifndef __STRING_DEFINE_FLAG__
     #warning "String Library is not imported! including to library..."
     #include "string.h"
 #endif

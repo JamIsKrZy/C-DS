@@ -127,7 +127,7 @@
 #define list_free() todo
 
 
-#ifdef __STRING_DEFINE__
+#ifdef __STRING_DEFINE_FLAG__ 
 
 #define list_to_string(ll, fmt)({\
     String str = string_new();\
