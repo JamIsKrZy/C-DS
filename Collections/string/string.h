@@ -11,8 +11,6 @@
 
 
 
-
-
 typedef struct String {
     __VectorChar__ buffer;
 } String; 
