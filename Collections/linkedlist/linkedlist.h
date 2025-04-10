@@ -102,21 +102,43 @@
     else\
     {\
         __typeof__(ll.head) node = ll.head;\
-        if(!node){\
-            return_flag = false;\
+        if(node){\
+            return_value = node->element;\
+            ll.head = node->next? node->next : NULL;\
+            ll.head->prev = NULL;\
+            LL_FREE(node);  \
+            ll.len -= 1;\
         }\
         else\
         {\
-            return_value = node->element;\
-            ll.head = node->next? node->next : NULL;\
-            LL_FREE(node);  \
-            ll.len -= 1;\
+            return_flag = false;\
         }\
     }\
     return_flag;\
 })
 
-#define list_pop_back() todo
+#define list_pop_back(ll) ({\
+    bool return_flag = true;\
+    if(!ll.tail){\
+        return_flag = false;\
+    }\
+    else \
+    {\
+        __typeof__(ll.head) node = ll.tail;\
+        if(node){\
+            return_value = node->element;\
+            ll.tail = node->prev? node->prev : NULL;\
+            ll.tail->next = NULL;\
+            LL_FREE(node);\
+            ll.len -= 1;\
+        }\
+        else\
+        {\
+            return_flag = false;\
+        }\
+    }\
+    return_flag;\
+})
 
 #define list_insert() todo
 #define list_len() todo
